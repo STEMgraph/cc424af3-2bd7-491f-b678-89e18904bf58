@@ -1,51 +1,152 @@
 <!---
 {
-  "depends_on": [],
+  "id": "cc424af3-2bd7-491f-b678-89e18904bf58",
+  "depends_on": [
+    "AND",
+    "61354751-6887-4761-9ef0-ca25d237cf1c",
+    "800c7dd9-5ccf-42c1-b9ea-c2764579cf5d"
+  ],
   "author": "Stephan Bökelmann",
-  "first_used": "2025-03-17",
-  "keywords": ["learning", "exercises", "education", "practice"]
+  "first_used": "2025-06-12",
+  "keywords": ["C", "control flow", "if", "while", "for", "objdump", "jmp"]
 }
 --->
 
-# Learning Through Exercises
+# Introduction to Control Flow in C
+
+> In this exercise you will learn how to use control flow statements in C — specifically `goto`, `if`, `while`, and `for`. Furthermore, we will explore how these constructs translate into jump instructions (`jmp`, `je`, `jne`, etc.) in assembly by compiling with `-c` and inspecting the resulting object file using `objdump`.
 
 ## Introduction
-Learning by doing is one of the most effective methods to acquire new knowledge and skills. Rather than passively consuming information, actively engaging in problem-solving fosters deeper understanding and long-term retention. By working through structured exercises, students can grasp complex concepts in a more intuitive and applicable way. This approach is particularly beneficial in technical fields like programming, mathematics, and engineering.
+
+Control flow is how programs make decisions and repeat operations. In C, this is done using constructs like `if`, `while`, and `for`, which are essential for branching logic and loops. Internally, these structures are compiled down to jump instructions that control the CPU's program counter.
+
+To bridge the gap between high-level syntax and low-level execution, you will:
+
+* Compile your C source to an object file with `gcc -c`.
+* Disassemble the `.o` file using `objdump -d`.
+* Observe how control flow constructs translate into assembly.
+
+Additionally, compile and run your programs to verify their runtime behavior:
+
+```sh
+gcc -o main main.c
+./main
+```
+
+This combination of runtime testing and low-level inspection builds a robust understanding of how control structures operate.
 
 ### Further Readings and Other Sources
-- [The Importance of Practice in Learning](https://www.sciencedirect.com/science/article/pii/S036013151300062X)
-- "The Art of Learning" by Josh Waitzkin
-- [How to Learn Effectively: 5 Key Strategies](https://www.edutopia.org/article/5-research-backed-learning-strategies)
+
+* [cppreference: if](https://en.cppreference.com/w/c/language/if)
+* [cppreference: while](https://en.cppreference.com/w/c/language/while)
+* [cppreference: for](https://en.cppreference.com/w/c/language/for)
+* [man page: objdump](https://linux.die.net/man/1/objdump)
 
 ## Tasks
-1. **Write a Summary**: Summarize the concept of "learning by doing" in 3-5 sentences.
-2. **Example Identification**: List three examples from your own experience where learning through exercises helped you understand a topic better.
-3. **Create an Exercise**: Design a simple exercise for a topic of your choice that someone else could use to practice.
-4. **Follow an Exercise**: Find an online tutorial that includes exercises and complete at least two of them.
-5. **Modify an Existing Exercise**: Take a basic problem from a textbook or online course and modify it to make it slightly more challenging.
-6. **Pair Learning**: Explain a concept to a partner and guide them through an exercise without giving direct answers.
-7. **Review Mistakes**: Look at an exercise you've previously completed incorrectly. Identify why the mistake happened and how to prevent it in the future.
-8. **Time Challenge**: Set a timer for 10 minutes and try to solve as many simple exercises as possible on a given topic.
-9. **Self-Assessment**: Create a checklist to evaluate your own performance in completing exercises effectively.
-10. **Reflect on Progress**: Write a short paragraph on how this structured approach to exercises has influenced your learning.
 
-<details>
-  <summary>Tip for Task 5</summary>
-  Try making small adjustments first, such as increasing the difficulty slightly or adding an extra constraint.
-</details>
+### 1. Jump Using `goto`
+
+Create a program that skips over a `printf()` call using `goto`.
+
+```c
+int main() {
+    goto skip;
+    printf("This will be skipped.\n");
+skip:
+    printf("This will be printed.\n");
+    return 0;
+}
+```
+
+**Inspect**: Look for an unconditional `jmp` in the disassembly. Identify the label's location and confirm that the jump skips over the first print call.
+
+### 2. Infinite Loop with `while (1)`
+
+Use an unconditional loop to demonstrate how a `while` with a constant condition is compiled.
+
+```c
+int main() {
+    while (1) {
+        printf("Looping...\n");
+    }
+    return 0;
+}
+```
+
+**Inspect**: Locate the jump that loops back. It should be an unconditional backward `jmp`.
+
+### 3. Basic Conditional `if`
+
+Introduce data-dependent branching.
+
+```c
+int main() {
+    int a = 3;
+    if (a > 0) {
+        printf("Positive\n");
+    }
+    return 0;
+}
+```
+
+**Inspect**: You should see a `cmp` instruction followed by a conditional jump like `jle` (jump if less or equal). The jump skips over the `printf` if the condition is false.
+
+### 4. Bounded Loop with `while`
+
+Create a counter loop.
+
+```c
+int main() {
+    int i = 0;
+    while (i < 5) {
+        printf("i = %d\n", i);
+        i++;
+    }
+    return 0;
+}
+```
+
+**Inspect**: There should be a conditional jump at the beginning of the loop and a backward jump at the end. Identify where the counter variable is compared.
+
+### 5. Counted Loop with `for`
+
+Rewrite the same logic using `for` syntax.
+
+```c
+int main() {
+    for (int i = 0; i < 5; i++) {
+        printf("i = %d\n", i);
+    }
+    return 0;
+}
+```
+
+**Inspect**: Compare this to the `while` loop. Find where initialization, comparison, increment, and jumps happen.
+
+### 6. Loop with Nested Condition
+
+Demonstrate combined conditional and loop behavior.
+
+```c
+int main() {
+    for (int i = 0; i < 10; i++) {
+        if (i % 2 == 0) {
+            printf("even: %d\n", i);
+        }
+    }
+    return 0;
+}
+```
+
+**Inspect**: There should be two sets of jumps — one for the loop and another for the `if`. Find the modulus operation and its conditional branch.
 
 ## Questions
-1. What are the main benefits of learning through exercises compared to passive learning?
-2. How do exercises improve long-term retention?
-3. Can you think of a subject where learning through exercises might be less effective? Why?
-4. What role does feedback play in learning through exercises?
-5. How can self-designed exercises improve understanding?
-6. Why is it beneficial to review past mistakes in exercises?
-7. How does explaining a concept to someone else reinforce your own understanding?
-8. What strategies can you use to stay motivated when practicing with exercises?
-9. How can timed challenges contribute to learning efficiency?
-10. How do exercises help bridge the gap between theory and practical application?
+
+1. What is the difference in jump behavior between `goto` and a loop?
+2. How do you recognize conditional branches in the disassembled output?
+3. How is the increment operation positioned in a `for` loop versus a `while`?
+4. Can you reorder your `if` logic and observe different jump outcomes?
 
 ## Advice
-Practice consistently and seek out diverse exercises that challenge different aspects of a topic. Combine exercises with reflection and feedback to maximize your learning efficiency. Don't hesitate to adapt exercises to fit your own needs and ensure that you're actively engaging with the material, rather than just going through the motions.
 
+Every jump in assembly corresponds to a decision or repetition in your code. Use `objdump -d` as a lens into the machine's behavior. Combining source-level thinking with disassembly sharpens your understanding of both performance and logic. Be curious — modify, recompile, and observe what changes.
