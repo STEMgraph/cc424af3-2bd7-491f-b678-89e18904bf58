@@ -44,23 +44,7 @@ This combination of runtime testing and low-level inspection builds a robust und
 
 ## Tasks
 
-### 1. Jump Using `goto`
-
-Create a program that skips over a `printf()` call using `goto`.
-
-```c
-int main() {
-    goto skip;
-    printf("This will be skipped.\n");
-skip:
-    printf("This will be printed.\n");
-    return 0;
-}
-```
-
-**Inspect**: Look for an unconditional `jmp` in the disassembly. Identify the label's location and confirm that the jump skips over the first print call.
-
-### 2. Infinite Loop with `while (1)`
+### Infinite Loop with `while (1)`
 
 Use an unconditional loop to demonstrate how a `while` with a constant condition is compiled.
 
@@ -75,7 +59,7 @@ int main() {
 
 **Inspect**: Locate the jump that loops back. It should be an unconditional backward `jmp`.
 
-### 3. Basic Conditional `if`
+### Basic Conditional `if`
 
 Introduce data-dependent branching.
 
@@ -91,7 +75,7 @@ int main() {
 
 **Inspect**: You should see a `cmp` instruction followed by a conditional jump like `jle` (jump if less or equal). The jump skips over the `printf` if the condition is false.
 
-### 4. Bounded Loop with `while`
+### Bounded Loop with `while`
 
 Create a counter loop.
 
@@ -108,7 +92,7 @@ int main() {
 
 **Inspect**: There should be a conditional jump at the beginning of the loop and a backward jump at the end. Identify where the counter variable is compared.
 
-### 5. Counted Loop with `for`
+### Counted Loop with `for`
 
 Rewrite the same logic using `for` syntax.
 
@@ -123,7 +107,7 @@ int main() {
 
 **Inspect**: Compare this to the `while` loop. Find where initialization, comparison, increment, and jumps happen.
 
-### 6. Loop with Nested Condition
+### Loop with Nested Condition
 
 Demonstrate combined conditional and loop behavior.
 
